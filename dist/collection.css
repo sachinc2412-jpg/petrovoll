@@ -1,0 +1,22 @@
+/* Collection: quiet editorial composition, one product at a time. */
+.product-story{height:260svh;background:#f7f4ee}
+.product-story .story-sticky{height:100svh;min-height:620px;padding:0;background:#f7f4ee!important}
+.product-story .story-sticky .section-top{position:absolute;top:40px;left:6.5%;right:6.5%;margin:0;padding-bottom:22px;border-bottom:1px solid #a9997e30;z-index:4}
+.product-story .section-top .eyebrow,.product-story .section-top .micro{font-size:9px;letter-spacing:1.8px;color:#887655}
+.product-story .story-copy{top:116px!important;bottom:116px;left:6.5%!important;width:43%!important;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;will-change:transform,opacity}
+.product-story .story-copy>.eyebrow{font-size:9px;letter-spacing:2px;color:#9b712f}
+.product-story .story-copy h2{font-size:clamp(48px,5.15vw,82px);line-height:1.06;letter-spacing:-.055em;margin:24px 0 22px;max-width:590px}
+.product-story .story-copy h2 em{color:#af111c;font-weight:400}
+.product-story .story-copy p{font-size:13px;line-height:1.8;max-width:355px;margin:0 0 22px;color:#80735f}
+.product-story .story-copy .button{min-width:185px;border-radius:50px;padding:15px 23px;font-size:11px;margin:0;background:#a7111a;color:#fff}
+.product-story .product-stage{top:105px!important;bottom:110px;right:6.5%!important;left:auto!important;width:44%!important;height:auto!important;overflow:visible}
+.product-story .product-stage img,.product-story .product-stage img.original,.product-story .product-stage img.product-layer{position:absolute;inset:0;width:100%;height:100%;max-height:580px;margin:auto;object-fit:contain;mix-blend-mode:normal;filter:drop-shadow(0 22px 20px #5d45241c)}
+.product-story .story-word{top:auto!important;bottom:108px;left:51%;font-size:clamp(68px,9vw,150px)!important;line-height:1;letter-spacing:-.05em;color:#8b7657!important;pointer-events:none;z-index:0}
+.product-story .story-controls{left:6.5%;right:6.5%;bottom:32px;border:0;padding:0;gap:36px;z-index:5}
+.product-story .story-controls button{position:relative;border-top:1px solid #b2a28544;padding:20px 0 0;font-size:10px;color:#a59a89;gap:15px;transition:color .25s}
+.product-story .story-controls button:before{content:'';position:absolute;left:0;right:0;top:-1px;height:2px;background:#ad1420;transform:scaleX(var(--chapter-progress,0));transform-origin:left}
+.product-story .story-controls button.active{color:#a7111a;border-color:#b2a28544}
+.product-story .story-controls span{letter-spacing:1.2px}
+@media(min-width:701px) and (max-height:740px){.product-story .story-copy h2{font-size:clamp(45px,4.4vw,66px);margin:18px 0}.product-story .story-copy p{font-size:12px;margin-bottom:18px}.product-story .story-copy{top:100px!important;bottom:105px}.product-story .product-stage{top:100px!important;bottom:110px}}
+@media(max-width:700px){.product-story{height:250svh}.product-story .story-sticky{min-height:740px}.product-story .story-sticky .section-top{top:28px;left:6%;right:6%;padding-bottom:17px}.product-story .section-top .eyebrow{font-size:7px}.product-story .section-top .micro{display:none}.product-story .story-copy{top:85px!important;bottom:auto;left:6%!important;width:88%!important;height:285px;justify-content:flex-start}.product-story .story-copy h2{font-size:44px;line-height:1.04;margin:16px 0 15px}.product-story .story-copy>.eyebrow{font-size:7px}.product-story .story-copy p{font-size:11px;max-width:320px;margin-bottom:16px;line-height:1.6}.product-story .story-copy .button{font-size:10px;padding:10px 19px;min-width:166px}.product-story .product-stage{top:385px!important;bottom:92px;right:6%!important;width:88%!important}.product-story .product-stage img,.product-story .product-stage img.original,.product-story .product-stage img.product-layer{width:100%;height:100%}.product-story .story-word{bottom:108px;left:12%;font-size:22vw!important}.product-story .story-controls{left:6%;right:6%;bottom:28px;gap:18px}.product-story .story-controls button{font-size:8px;gap:8px;padding-top:15px}.product-story .story-controls span{letter-spacing:.5px}}
+@media(prefers-reduced-motion:reduce){.product-story{height:auto}.product-story .story-sticky{position:relative;min-height:780px}.product-story .story-copy,.product-story .product-stage img{transform:none!important;opacity:1!important}.product-story .story-controls button.active:before{transform:scaleX(1)}}

@@ -1,0 +1,9 @@
+const root=document.querySelector('.factory-process'),$=s=>root.querySelector(s),all=s=>[...root.querySelectorAll(s)],reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,overview=$('.factory-video'),detail=$('.factory-step-video');
+const stages=[{title:'Ingredients',copy:'Base oils and additives are selected for the intended lubricant formulation.'},{title:'Controlled blending',copy:'Measured ingredients are combined in blending vessels to produce a consistent mixture.'},{title:'Laboratory checks',copy:'Samples are checked against the required product specifications before release.'},{title:'Filling & dispatch',copy:'Approved lubricant is filled and packaged. Cartons are loaded for distribution.'}];
+let active=-1,paused=reduced,visible=false;
+const buttons=all('[data-factory-step]');
+function syncPause(){const stop=paused||!visible||document.hidden;root.classList.toggle('factory-paused',stop);[overview,detail].forEach(video=>{if(stop)video.pause();else video.play().catch(error=>{if(error.name!=='AbortError'){paused=true;syncPause()}})})}
+function select(i){active=i;$('.factory-focus h3').textContent=stages[i].title;$('.factory-focus p').textContent=stages[i].copy;buttons.forEach(b=>{const chosen=Number(b.dataset.factoryStep)===i;b.classList.toggle('active',chosen);b.setAttribute('aria-pressed',String(chosen))});detail.poster=`assets/process-step-${i+1}.webp`;detail.src=`assets/process-step-${i+1}.mp4`;detail.setAttribute('aria-label',stages[i].title+' process close-up');detail.load();syncPause()}
+buttons.forEach(b=>b.addEventListener('click',()=>select(Number(b.dataset.factoryStep))));
+detail.addEventListener('ended',()=>select((active+1)%stages.length));
+new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;syncPause()},{threshold:.12}).observe(root);document.addEventListener('visibilitychange',syncPause);select(0);

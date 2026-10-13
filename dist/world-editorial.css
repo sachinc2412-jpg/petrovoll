@@ -1,0 +1,30 @@
+.world-sequence{position:relative;height:330svh;margin-bottom:50px}
+.world-sequence .application-studio{position:sticky;top:160px;height:calc(100svh - 180px);min-height:540px;border:1px solid #b5a07c33;border-radius:18px;background:#f8f5ee;overflow:hidden;box-shadow:0 22px 65px #6c54220b}
+.world-tabs{height:61px;background:#f8f5ee;border-bottom:1px solid #b5a07c33}
+.world-tabs button{padding:18px 12px;background:none;border:0;color:#a48b62;gap:14px;font-size:8px;position:relative}
+.world-tabs button span{color:#88785e;font-size:11px}
+.world-tabs button[aria-selected="true"]{background:none;color:#a41017}
+.world-tabs button[aria-selected="true"] span{color:#a41017}
+.world-tabs button[aria-selected="true"]:after{content:'';position:absolute;bottom:-1px;height:2px;left:22%;right:22%;background:#a41017}
+.world-scene{height:calc(100% - 61px);background:#f8f5ee}
+.world-background{left:43%;width:57%;z-index:0;transition:opacity .65s;object-position:65% center;transform:none!important}
+.world-overlay{left:43%;z-index:1;background:linear-gradient(0deg,#1f241b70,transparent 65%);pointer-events:none}
+.world-content{left:5%;top:17%;width:34%;max-width:none;z-index:3}
+.world-content .eyebrow{font-size:7px;letter-spacing:1.5px;color:#a17a37}
+.world-content h3{font-size:clamp(35px,3.5vw,55px);line-height:1.1;letter-spacing:-.05em;color:#292721;margin:23px 0}
+.world-content h3 em{color:#a7111a}
+.world-content p{font-size:12px;color:#938169;line-height:1.85;max-width:300px;margin:0}
+.world-content .button{background:#a7111a;color:#fff6e8;font-size:10px;padding:14px 21px;min-width:185px;margin-top:27px;border-radius:50px}
+.world-product{right:4%;top:31%;height:58%;width:20%;z-index:3;transform:none!important}
+.world-product>img{animation:none!important;height:82%;width:100%;filter:drop-shadow(0 16px 15px #1b190d40)}
+.world-pack-label{align-items:center;gap:7px;margin-top:15px;color:#fff7e8}
+.world-pack-label span{font-size:23px;font-weight:500;letter-spacing:-.6px}
+.world-pack-label small{font-size:6px;letter-spacing:1px;text-align:center}
+.world-product.marine-world{top:auto;bottom:14%;height:auto;width:31%}
+.world-product.marine-world .world-pack-label span{font-size:35px}
+.world-footer{left:5%;right:5%;bottom:25px;color:#9e865e;font-size:6px;letter-spacing:1.1px;z-index:4}
+#world-counter{color:#fff4dc;font-size:8px}
+.application-studio:after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#ab1420;transform:scaleX(var(--world-progress,0));transform-origin:left;z-index:5}
+@media(max-width:1000px) and (min-width:701px){.world-content{top:13%;width:34%}.world-content h3{font-size:35px}.world-content p{font-size:11px}.world-content .button{min-width:165px;padding:13px 18px}.world-product{width:24%;right:2%}}
+@media(max-width:700px){.world-sequence{height:350svh;margin-bottom:35px}.world-sequence .application-studio{top:105px;height:calc(100svh - 120px);min-height:650px;border-radius:13px}.world-tabs{height:58px}.world-tabs button{padding:12px 3px;gap:7px;font-size:6px}.world-tabs button span{font-size:8px}.world-scene{height:calc(100% - 58px)}.world-content{top:23px;left:7%;width:86%;max-width:none}.world-content h3{font-size:34px;margin:15px 0}.world-content .eyebrow{font-size:6px}.world-content p{font-size:10px;line-height:1.65;max-width:285px}.world-content .button{padding:10px 16px;font-size:9px;min-width:173px;margin-top:15px}.world-background{left:0;top:52%;width:100%;height:48%;object-position:65% center}.world-overlay{left:0;top:52%}.world-product{top:55%;height:34%;width:37%;right:8%}.world-pack-label{gap:4px;margin-top:7px}.world-pack-label span{font-size:17px}.world-pack-label small{font-size:5px}.world-footer{bottom:15px;left:7%;right:7%;font-size:5px;color:#fff4dc}.world-product.marine-world{bottom:17%;width:70%;right:6%}.world-product.marine-world .world-pack-label span{font-size:30px}}
+@media(prefers-reduced-motion:reduce){.world-sequence{height:auto}.world-sequence .application-studio{position:relative;top:auto;height:700px}.application-studio:after{display:none}.world-background{transition:none}.world-content,.world-product{animation:none!important}}
