@@ -8,6 +8,7 @@
  const tabs=[...document.querySelectorAll('[data-application]')],image=document.querySelector('#application-image');let current=0,changeId=0;
  function select(i,focus=false){current=i;const d=data[i],id=++changeId;
   tabs.forEach((b,n)=>{b.setAttribute('aria-selected',String(i===n));b.tabIndex=i===n?0:-1});
+  const groups=[['Engine oils','Transmission fluids','Coolants & car care'],['Diesel engine oils','Heavy-duty applications','Fleet operations'],['Hydraulic oils','Gear & compressor oils','Specialist formulations'],['Cylinder oils','Trunk piston oils','Outboard applications']];const specs=document.querySelector('#application-specs');specs.replaceChildren(...groups[i].map(text=>{const el=document.createElement('span');el.textContent=text;return el}));
   document.querySelector('#application-panel').setAttribute('aria-labelledby',`application-tab-${i}`);
   document.querySelector('#application-title').textContent=d.title;document.querySelector('#application-description').textContent=d.description;document.querySelector('#application-image-label').textContent=`0${i+1} / ${d.label}`;document.querySelector('#application-catalogue').innerHTML=d.button+' <span aria-hidden="true">↗</span>';
   const preload=new Image();preload.src='assets/'+d.image;preload.onload=()=>{if(id===changeId){image.src=preload.src;image.alt=d.alt;image.animate([{opacity:.55},{opacity:1}],{duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:350,easing:'ease-out'})}};
@@ -15,11 +16,6 @@
  }
  tabs.forEach((b,i)=>{b.addEventListener('click',()=>select(i));b.addEventListener('keydown',e=>{let next;if(e.key==='ArrowRight')next=(i+1)%4;if(e.key==='ArrowLeft')next=(i+3)%4;if(e.key==='Home')next=0;if(e.key==='End')next=3;if(next!==undefined){e.preventDefault();select(next,true)}})});
  document.querySelector('#application-catalogue').addEventListener('click',()=>openCatalog(data[current].filter));
- // Short section entrances, with no pinned scenes beyond the signature hero.
- if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-  const targets=document.querySelectorAll('.section-heading,.about-image,.about-copy,.application-explorer,.product-card,.network-map-shell,.partnership,.contact-copy');
-  const observer=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){e.target.animate([{opacity:.35,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,easing:'cubic-bezier(.2,.7,.2,1)',fill:'none'});observer.unobserve(e.target)}},{threshold:.15});targets.forEach(el=>observer.observe(el));
- }
  const svg=document.querySelector('#network-map');
  if(!window.d3)return;
  Promise.all([fetch('world-land.json').then(r=>r.json()),fetch('locations.json').then(r=>r.json())]).then(([world,locations])=>{
