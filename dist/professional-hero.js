@@ -18,10 +18,10 @@
   schedule();
  }
  function update(){frame=0;if(!geometry||media.matches)return;
-  const header=innerWidth<=820?72:86,r=sequence.getBoundingClientRect();
+  const header=72,r=sequence.getBoundingClientRect();
   const p=clamp((header-r.top)/Math.max(1,r.height-pin.offsetHeight)),expand=ease((p-.08)/.38),leave=ease((p-.05)/.27);
   photo.style.inset=`${geometry.top*(1-expand)}px ${geometry.right*(1-expand)}px ${geometry.bottom*(1-expand)}px ${geometry.left*(1-expand)}px`;
-  photo.style.borderRadius=`${6*(1-expand)}px`;copy.style.opacity=1-leave;copy.inert=leave>.9;figure.style.opacity=1-leave;
+  photo.style.borderRadius=`${24*(1-expand)}px`;copy.style.opacity=1-leave;copy.inert=leave>.9;figure.style.opacity=1-leave;
   const entry=ease((p-.46)/.09),resolve=ease((p-.55)/.35);
   finish.style.opacity=entry;pin.querySelector('.hero-mask-field').style.opacity=1-resolve;pin.querySelector('.hero-mask-outline').style.opacity=(1-resolve)*.5;pin.querySelector('.hero-mask-caption').style.opacity=ease((p-.82)/.15);
  }
