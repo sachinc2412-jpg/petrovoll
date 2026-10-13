@@ -17,35 +17,51 @@ function renderCatalog(){if(catalogueState!=='ready'){ $('#result-count').textCo
 $('#search').addEventListener('input',renderCatalog);$('#filter').addEventListener('change',renderCatalog);
 fetch('catalog.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{catalogData=data;catalogueState='ready';renderCatalog()}).catch(()=>{catalogueState='error';$('#result-count').textContent='The catalogue could not load. Please refresh or view the official product catalogue.';const a=document.createElement('a');a.href='https://petrovoll.com/Products';a.textContent='View official catalogue ↗';$('#catalog-grid').append(a)});
 
-// Production stages change only when selected; videos remain under visitor control.
+// The ten-second overview is the only production clock. Dispatch starts at 6s.
 const processStages=[
- {title:'Ingredients',description:'Base oils and additives are selected for the intended lubricant formulation.'},
- {title:'Blending',description:'Selected base oils and additives come together through controlled blending.'},
- {title:'Laboratory checks',description:'Laboratory testing supports raw material checks and finished product analysis.'},
- {title:'Filling & dispatch',description:'Finished lubricant is filled, packaged and prepared for distribution.'}
+ {title:'Ingredients',description:'Base oils and additives are selected for the intended lubricant formulation.',start:0,end:2},
+ {title:'Blending',description:'Selected base oils and additives come together through controlled blending.',start:2,end:4},
+ {title:'Laboratory checks',description:'Laboratory testing supports raw material checks and finished product analysis.',start:4,end:6},
+ {title:'Filling & dispatch',description:'Finished lubricant is filled, packaged and prepared for distribution.',start:6,end:10}
 ];
-const processTabs=$$('[data-step]'), processVideo=$('#process-video');let selectedStep=0;
-function selectProcess(i,focus=false){
- const stage=processStages[i];if(!stage)return;
- processTabs.forEach((b,n)=>{b.classList.toggle('active',i===n);b.setAttribute('aria-selected',String(i===n));b.tabIndex=i===n?0:-1});
+const processTabs=$$('[data-step]'),processVideo=$('#process-video'),overviewVideo=$('#factory-overview-video');
+let selectedStep=0,factoryVisible=false,userStarted=false;
+function displayProcess(i){
+ const stage=processStages[i];
+ processTabs.forEach((b,n)=>{const active=i===n;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1});
  $('#process-panel').setAttribute('aria-labelledby',`process-tab-${i}`);
- if(selectedStep!==i){processVideo.pause();processVideo.poster=`assets/process-step-${i+1}.webp`;processVideo.querySelector('source').src=`assets/process-step-${i+1}.mp4`;processVideo.load();selectedStep=i;syncFactoryPlayback();}
- processVideo.setAttribute('aria-label',stage.title+' production visualization');
  $('#process-title').textContent=stage.title;$('#process-description').textContent=stage.description;
- document.querySelectorAll('[data-factory-step]').forEach(b=>{const chosen=Number(b.dataset.factoryStep)===i;b.classList.toggle('active',chosen);b.setAttribute('aria-pressed',String(chosen))});if(focus)processTabs[i].focus();
+ processVideo.setAttribute('aria-label',stage.title+' process visualization synchronized to the main film');
+ $$('[data-factory-step]').forEach(b=>{const active=Number(b.dataset.factoryStep)===i;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+ if(selectedStep!==i){selectedStep=i;processVideo.pause();processVideo.poster=`assets/process-step-${i+1}.webp`;processVideo.querySelector('source').src=`assets/process-step-${i+1}.mp4`;processVideo.load();}
 }
-processTabs.forEach((b,i)=>{b.addEventListener('click',()=>selectProcess(i));b.addEventListener('keydown',e=>{let next;if(e.key==='ArrowDown'||e.key==='ArrowRight')next=(i+1)%4;if(e.key==='ArrowUp'||e.key==='ArrowLeft')next=(i+3)%4;if(e.key==='Home')next=0;if(e.key==='End')next=3;if(next!==undefined){e.preventDefault();selectProcess(next,true)}})});
-const overviewVideo=$('#factory-overview-video'),playbackButton=$('#factory-playback');
-const factoryVideos=[overviewVideo,processVideo],visibleVideos=new Set();let factoryPaused=reduced;
+function syncDetail(){
+ const time=overviewVideo.currentTime||0;let i=processStages.findIndex(stage=>time>=stage.start&&time<stage.end);if(i<0)i=time>=10?3:0;
+ displayProcess(i);const stage=processStages[i];
+ const progress=Math.max(0,Math.min(.999,(time-stage.start)/(stage.end-stage.start)));
+ processTabs[i].style.setProperty('--step-progress',progress);
+ processTabs.forEach((b,n)=>{if(n!==i)b.style.setProperty('--step-progress',n<i?1:0)});
+ if(processVideo.readyState>=1&&Number.isFinite(processVideo.duration)){
+  const target=progress*processVideo.duration;
+  if(Math.abs(processVideo.currentTime-target)>.35)processVideo.currentTime=target;
+  processVideo.playbackRate=Math.min(4,Math.max(.25,processVideo.duration/(stage.end-stage.start)*overviewVideo.playbackRate));
+  if(!overviewVideo.paused&&factoryVisible&&!document.hidden)processVideo.play().catch(()=>{});else processVideo.pause();
+ }
+}
 function syncFactoryPlayback(){
- playbackButton.textContent=factoryPaused?'Play videos':'Pause videos';playbackButton.setAttribute('aria-pressed',String(factoryPaused));
- for(const video of factoryVideos){if(factoryPaused||document.hidden||!visibleVideos.has(video)){video.pause();}else{video.play().catch(error=>{if(error.name!=='AbortError'){factoryPaused=true;syncFactoryPlayback()}});}}
+ if(!factoryVisible||document.hidden||reduced&&!userStarted){overviewVideo.pause();processVideo.pause();return;}
+ overviewVideo.play().then(syncDetail).catch(()=>{});
 }
-const videoObserver=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting)visibleVideos.add(e.target);else visibleVideos.delete(e.target);}syncFactoryPlayback()},{threshold:.12});factoryVideos.forEach(v=>videoObserver.observe(v));
-playbackButton.addEventListener('click',()=>{factoryPaused=!factoryPaused;syncFactoryPlayback()});
+function selectProcess(i,focus=false){if(!processStages[i])return;userStarted=true;overviewVideo.currentTime=processStages[i].start;syncDetail();syncFactoryPlayback();if(focus)processTabs[i].focus();}
+processTabs.forEach((b,i)=>{b.addEventListener('click',()=>selectProcess(i));b.addEventListener('keydown',e=>{let next;if(e.key==='ArrowDown'||e.key==='ArrowRight')next=(i+1)%4;if(e.key==='ArrowUp'||e.key==='ArrowLeft')next=(i+3)%4;if(e.key==='Home')next=0;if(e.key==='End')next=3;if(next!==undefined){e.preventDefault();selectProcess(next,true)}})});
+$$('[data-factory-step]').forEach(b=>b.addEventListener('click',()=>selectProcess(Number(b.dataset.factoryStep))));
+for(const event of ['timeupdate','seeked','playing','pause','ratechange','loadedmetadata'])overviewVideo.addEventListener(event,syncDetail);
+processVideo.addEventListener('loadedmetadata',syncDetail);
+new IntersectionObserver(entries=>{factoryVisible=entries[0].isIntersecting;syncFactoryPlayback()},{threshold:.1}).observe($('.factory-console'));
 document.addEventListener('visibilitychange',syncFactoryPlayback);
-processVideo.addEventListener('ended',()=>{if(!factoryPaused)selectProcess((selectedStep+1)%4)});
-$$('[data-factory-step]').forEach(b=>b.addEventListener('click',()=>selectProcess(Number(b.dataset.factoryStep))));syncFactoryPlayback();
+overviewVideo.addEventListener('click',()=>{userStarted=true;syncFactoryPlayback()});
+overviewVideo.tabIndex=0;overviewVideo.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();userStarted=true;syncFactoryPlayback()}});
+displayProcess(0);
 fetch('locations.json').then(r=>{if(!r.ok)throw Error('Network unavailable');return r.json()}).then(locations=>{
  const select=$('#network-location');
  for(const location of [...locations].sort((a,b)=>a.name.localeCompare(b.name))){const option=document.createElement('option');option.value=location.key;option.textContent=location.name;select.append(option)}

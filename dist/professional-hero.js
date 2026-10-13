@@ -12,6 +12,7 @@
   geometry={top:b.top-a.top,left:b.left-a.left,right:a.right-b.right,bottom:a.bottom-b.bottom,width:a.width,height:a.height};
   const height=Math.round(1600*a.height/Math.max(1,a.width));
   pin.querySelector('.hero-mask-svg').setAttribute('viewBox',`0 0 1600 ${height}`);
+  pin.querySelector('.hero-mask-image').setAttribute('preserveAspectRatio','xMidYMid meet');
   for(const selector of ['#hero-brand-mask','.hero-mask-field','.hero-mask-image']){const el=pin.querySelector(selector);el.setAttribute('height',height);}
   for(const text of pin.querySelectorAll('.hero-mask-text,.hero-mask-outline')){text.setAttribute('y',height*.52+75);text.setAttribute('font-size','225');}
   schedule();
