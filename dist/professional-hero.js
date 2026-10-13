@@ -13,6 +13,8 @@
   const a=pin.getBoundingClientRect(),b=figure.getBoundingClientRect();
   const sourceWidth=image.naturalWidth||1672,sourceHeight=image.naturalHeight||941;
   const fullScale=Math.max(a.width/sourceWidth,a.height/sourceHeight),startScale=Math.max(b.width/sourceWidth,b.height/sourceHeight);
+  const planeWidth=sourceWidth*fullScale,planeHeight=sourceHeight*fullScale;
+  image.style.width=planeWidth+'px';image.style.height=planeHeight+'px';image.style.maxWidth='none';image.style.left=(a.width-planeWidth)/2+'px';image.style.top=(a.height-planeHeight)/2+'px';
   geometry={top:b.top-a.top,left:b.left-a.left,right:a.right-b.right,bottom:a.bottom-b.bottom,width:a.width,height:a.height,scale:startScale/fullScale,dx:b.left+b.width/2-a.left-a.width/2,dy:b.top+b.height/2-a.top-a.height/2-Math.max(0,startScale*sourceHeight-b.height)*.1,radius:parseFloat(getComputedStyle(figure).borderTopLeftRadius)||0};
   const height=1600*a.height/a.width;svg.setAttribute('viewBox',`0 0 1600 ${height}`);pin.querySelector('.hero-mask-image').setAttribute('preserveAspectRatio','xMidYMid slice');
   for(const selector of ['#hero-brand-mask','.hero-mask-field','.hero-mask-image'])pin.querySelector(selector).setAttribute('height',height);

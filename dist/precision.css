@@ -58,3 +58,5 @@ body{background:#fff;color:#202127}.site-header{height:72px;padding:8px 0;backgr
 
 /* Campaign artwork keeps automotive, transport and marine subjects together. */
 .hero-image img,.motion-ready .hero-image img{object-position:center 60%}
+
+.hero-motion-photo>img{position:absolute;max-width:none;display:block}
