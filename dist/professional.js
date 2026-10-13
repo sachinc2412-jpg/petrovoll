@@ -29,14 +29,23 @@ function selectProcess(i,focus=false){
  const stage=processStages[i];if(!stage)return;
  processTabs.forEach((b,n)=>{b.classList.toggle('active',i===n);b.setAttribute('aria-selected',String(i===n));b.tabIndex=i===n?0:-1});
  $('#process-panel').setAttribute('aria-labelledby',`process-tab-${i}`);
- if(selectedStep!==i){processVideo.pause();processVideo.poster=`assets/process-step-${i+1}.webp`;processVideo.querySelector('source').src=`assets/process-step-${i+1}.mp4`;processVideo.load();selectedStep=i;}
+ if(selectedStep!==i){processVideo.pause();processVideo.poster=`assets/process-step-${i+1}.webp`;processVideo.querySelector('source').src=`assets/process-step-${i+1}.mp4`;processVideo.load();selectedStep=i;syncFactoryPlayback();}
  processVideo.setAttribute('aria-label',stage.title+' production visualization');
  $('#process-title').textContent=stage.title;$('#process-description').textContent=stage.description;
- if(focus)processTabs[i].focus();
+ document.querySelectorAll('[data-factory-step]').forEach(b=>{const chosen=Number(b.dataset.factoryStep)===i;b.classList.toggle('active',chosen);b.setAttribute('aria-pressed',String(chosen))});if(focus)processTabs[i].focus();
 }
 processTabs.forEach((b,i)=>{b.addEventListener('click',()=>selectProcess(i));b.addEventListener('keydown',e=>{let next;if(e.key==='ArrowDown'||e.key==='ArrowRight')next=(i+1)%4;if(e.key==='ArrowUp'||e.key==='ArrowLeft')next=(i+3)%4;if(e.key==='Home')next=0;if(e.key==='End')next=3;if(next!==undefined){e.preventDefault();selectProcess(next,true)}})});
-const videoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(!e.isIntersecting)processVideo.pause()},{threshold:0});videoObserver.observe(processVideo);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)processVideo.pause()});
+const overviewVideo=$('#factory-overview-video'),playbackButton=$('#factory-playback');
+const factoryVideos=[overviewVideo,processVideo],visibleVideos=new Set();let factoryPaused=reduced;
+function syncFactoryPlayback(){
+ playbackButton.textContent=factoryPaused?'Play videos':'Pause videos';playbackButton.setAttribute('aria-pressed',String(factoryPaused));
+ for(const video of factoryVideos){if(factoryPaused||document.hidden||!visibleVideos.has(video)){video.pause();}else{video.play().catch(error=>{if(error.name!=='AbortError'){factoryPaused=true;syncFactoryPlayback()}});}}
+}
+const videoObserver=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting)visibleVideos.add(e.target);else visibleVideos.delete(e.target);}syncFactoryPlayback()},{threshold:.12});factoryVideos.forEach(v=>videoObserver.observe(v));
+playbackButton.addEventListener('click',()=>{factoryPaused=!factoryPaused;syncFactoryPlayback()});
+document.addEventListener('visibilitychange',syncFactoryPlayback);
+processVideo.addEventListener('ended',()=>{if(!factoryPaused)selectProcess((selectedStep+1)%4)});
+$$('[data-factory-step]').forEach(b=>b.addEventListener('click',()=>selectProcess(Number(b.dataset.factoryStep))));syncFactoryPlayback();
 fetch('locations.json').then(r=>{if(!r.ok)throw Error('Network unavailable');return r.json()}).then(locations=>{
  const select=$('#network-location');
  for(const location of [...locations].sort((a,b)=>a.name.localeCompare(b.name))){const option=document.createElement('option');option.value=location.key;option.textContent=location.name;select.append(option)}
