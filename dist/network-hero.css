@@ -7,3 +7,6 @@
 .hero-intro-pending .network-scene-stage{opacity:0}.network-building-sign{left:34%;top:31%;transform:rotate(29deg) skewX(-12deg);color:#807947}
 @media(max-width:600px){.network-building-sign{left:34%;top:31%}}
 @media(min-width:601px){.network-industrial-copy{width:12.5%}.network-products-copy{left:35%;width:11.5%}.network-technology-copy{left:62%;width:16.5%}.network-products-copy button{font-size:clamp(9px,.8vw,11px)}}
+/* Trim the unused canvas above the road network. */
+@media(min-width:601px){.network-hero-reference{padding-top:0}.network-hero-reference .network-hero-scene{margin-top:clamp(-90px,-6.25vw,-40px)}}
+@media(max-width:600px){.network-hero-reference{padding-top:86px}}
